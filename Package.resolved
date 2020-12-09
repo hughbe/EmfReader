@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "DataStream",
+        "repositoryURL": "https://github.com/hughbe/DataStream",
+        "state": {
+          "branch": null,
+          "revision": "e584f8516ac4ad38e6a062501c470fb44f2c9efd",
+          "version": "2.0.1"
+        }
+      },
+      {
+        "package": "MetafileReader",
+        "repositoryURL": "https://github.com/hughbe/MetafileReader",
+        "state": {
+          "branch": null,
+          "revision": "0541acf5916b5f5285be093e1bb28354844a145f",
+          "version": "1.0.2"
+        }
+      },
+      {
+        "package": "BitField",
+        "repositoryURL": "https://github.com/hughbe/SwiftBitField",
+        "state": {
+          "branch": null,
+          "revision": "993f2e4ec4d4edfc598abd3e87cc813e937cffc1",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "WindowsDataTypes",
+        "repositoryURL": "https://github.com/hughbe/WindowsDataTypes",
+        "state": {
+          "branch": null,
+          "revision": "2d0efa7a0fbdb3eae9ff99456cb864382b883f4d",
+          "version": "1.0.10"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

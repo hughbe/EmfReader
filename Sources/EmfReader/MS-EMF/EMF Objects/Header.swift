@@ -38,7 +38,7 @@ public struct Header {
         /// from the FormatSignature enumeration (section 2.1.14).
         self.recordSignature = try FormatSignature(dataStream: &dataStream)
         guard self.recordSignature == .ENHMETA_SIGNATURE else {
-            throw MetafileReadError.corrupted
+            throw WmfReadError.corrupted
         }
         
         /// Version (4 bytes): An unsigned integer that specifies the EMF version for interoperability. This MAY be 0x00010000.
@@ -57,7 +57,7 @@ public struct Header {
         /// of the metafile.
         self.handles = try dataStream.read(endianess: .littleEndian)
         guard self.handles != 0 else {
-            throw MetafileReadError.corrupted
+            throw WmfReadError.corrupted
         }
         
         /// Reserved (2 bytes): An unsigned integer that MUST be 0x0000 and MUST be ignored.

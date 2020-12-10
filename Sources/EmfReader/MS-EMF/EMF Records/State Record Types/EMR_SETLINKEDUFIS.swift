@@ -16,7 +16,7 @@ public struct EMR_SETLINKEDUFIS {
     public let size: UInt32
     public let uNumLinkedUFI: UInt32
     public let ufis: [UniversalFontId]
-    public let reserved: UInt16
+    public let reserved: UInt64
     
     public init(dataStream: inout DataStream) throws {
         let startPosition = dataStream.position
@@ -28,16 +28,21 @@ public struct EMR_SETLINKEDUFIS {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 20 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000014 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
 
         /// uNumLinkedUFI (4 bytes): An unsigned integer specifying the number of UFIs to follow.
-        self.uNumLinkedUFI = try dataStream.read(endianess: .littleEndian)
-        guard 20 + self.uNumLinkedUFI * 8 <= self.size else {
+        let uNumLinkedUFI: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard uNumLinkedUFI < 0x1FFFFFFD &&
+                20 + uNumLinkedUFI * 8 <= size else {
             throw EmfReadError.corrupted
         }
+        
+        self.uNumLinkedUFI = uNumLinkedUFI
         
         /// ufis (variable): An array of uNumLinkedUFI elements of type UniversalFontId (section 2.2.27), which specifies the identifiers
         /// of the linked fonts.

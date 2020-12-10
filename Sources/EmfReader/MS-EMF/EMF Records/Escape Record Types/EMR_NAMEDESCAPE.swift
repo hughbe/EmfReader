@@ -34,7 +34,7 @@ public struct EMR_NAMEDESCAPE {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 24 && (size % 4) == 0 else {
+        guard size >= 0x00000014 && (size % 4) == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -51,22 +51,20 @@ public struct EMR_NAMEDESCAPE {
         
         /// cjDriver (4 bytes): An unsigned integer that specifies the number of bytes in the DriverName field. This value MUST be an
         /// even number.
-        self.cjDriver = try dataStream.read(endianess: .littleEndian)
-        guard (self.cjDriver % 2) == 0 else {
+        let cjDriver: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard cjDriver != 0 && (cjDriver % 2) == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.cjDriver = cjDriver
         
         /// cjIn (4 bytes): An unsigned integer specifying the number of bytes to pass to the printer driver.
         self.cjIn = try dataStream.read(endianess: .littleEndian)
         
         /// DriverName (variable): A null-terminated string of Unicode characters that specifies the name of the printer driver to receive
         /// data.
-        if self.cjDriver > 0 {
-            self.driverName = try dataStream.readString(count: Int(self.cjDriver) - 2, encoding: .utf16LittleEndian)!
-            let _: UInt16 = try dataStream.read(endianess: .littleEndian)
-        } else {
-            self.driverName = ""
-        }
+        self.driverName = try dataStream.readString(count: Int(self.cjDriver) - 2, encoding: .utf16LittleEndian)!
+        let _: UInt16 = try dataStream.read(endianess: .littleEndian)
         
         /// Data (variable): The data to pass to the printer driver.
         self.data = try dataStream.readBytes(count: Int(self.cjIn))

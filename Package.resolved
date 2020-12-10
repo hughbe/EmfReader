@@ -6,17 +6,8 @@
         "repositoryURL": "https://github.com/hughbe/DataStream",
         "state": {
           "branch": null,
-          "revision": "e584f8516ac4ad38e6a062501c470fb44f2c9efd",
-          "version": "2.0.1"
-        }
-      },
-      {
-        "package": "MetafileReader",
-        "repositoryURL": "https://github.com/hughbe/MetafileReader",
-        "state": {
-          "branch": null,
-          "revision": "0541acf5916b5f5285be093e1bb28354844a145f",
-          "version": "1.0.2"
+          "revision": "858175a666cd9d9d45b2d9a364dba61a41940120",
+          "version": "2.0.3"
         }
       },
       {

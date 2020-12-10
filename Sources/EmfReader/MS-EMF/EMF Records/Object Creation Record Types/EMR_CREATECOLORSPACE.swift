@@ -30,15 +30,18 @@ public struct EMR_CREATECOLORSPACE {
             throw EmfReadError.corrupted
         }
         
-        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record. This value is 0x0000001C.
+        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 76 else {
+        guard self.size >= 0x00000154 else {
             throw EmfReadError.corrupted
         }
         
         /// ihCS (4 bytes): An unsigned integer that specifies the index of the logical color space object in the EMF object table
         /// (section 3.1.1.1). This index MUST be saved so that this object can be reused or modified.
         self.ihCS = try dataStream.read(endianess: .littleEndian)
+        guard self.ihCS != 0 else {
+            throw EmfReadError.corrupted
+        }
         
         /// lcs (variable): A LogColorSpace object ([MS-WMF] section 2.2.2.11), which can specify the name of a color profile in
         /// ASCII characters.

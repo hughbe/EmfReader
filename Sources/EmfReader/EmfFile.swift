@@ -40,7 +40,7 @@ public struct EmfFile {
         self.data = DataStream(slicing: dataStream, startIndex: dataStream.position, count: min(dataStream.remainingCount, Int(header.emfHeader.bytes)))
     }
     
-    public func enumerateRecords(proc: (EmfRecord) -> MetafileEnumerationStatus) throws {
+    public func enumerateRecords(proc: (EmfRecord) throws -> MetafileEnumerationStatus) throws {
         var dataStream = self.data
         while dataStream.position < dataStream.count {
             let record = try EmfRecord(dataStream: &dataStream)
@@ -48,7 +48,7 @@ public struct EmfFile {
                 break
             }
 
-            let result = proc(record)
+            let result = try proc(record)
             if result == .break {
                 break
             }

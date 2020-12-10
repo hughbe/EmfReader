@@ -32,25 +32,38 @@ public struct EMR_CREATECOLORSPACEW {
             throw EmfReadError.corrupted
         }
         
-        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record. This value is 0x0000001C.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 80 else {
+        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000260 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// ihCS (4 bytes): An unsigned integer that specifies the index of the logical color space object in the EMF object table
         /// (section 3.1.1.1). This index MUST be saved so that this object can be reused or modified.
         self.ihCS = try dataStream.read(endianess: .littleEndian)
+        guard self.ihCS != 0 else {
+            throw EmfReadError.corrupted
+        }
         
         /// lcs (variable): A LogColorSpaceW object ([MS-WMF] section 2.2.2.12) that can specify the name of a color profile in
         /// Unicode UTF16-LE characters.
         self.lcs = try LogColorSpaceW(dataStream: &dataStream)
         
         /// cbData (4 bytes): An unsigned integer that specifies the size in bytes, of the Data field.
-        self.cbData = try dataStream.read(endianess: .littleEndian)
+        let cbData: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard cbData < 0xFFFFFD9D &&
+                0x260 + cbData <= size else {
+            throw EmfReadError.corrupted
+        }
+        
+        self.cbData = cbData
         
         /// Data (variable, optional): An array of bytes that specifies color profile data.
-        self.data = try dataStream.readBytes(count: Int(self.cbData))
+        self.data = try dataStream.readBytes(count: Int(max(1, self.cbData)))
+        
+        try dataStream.readFourByteAlignmentPadding(startPosition: startPosition)
         
         guard dataStream.position - startPosition == self.size else {
             throw EmfReadError.corrupted

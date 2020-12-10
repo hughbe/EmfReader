@@ -9,7 +9,6 @@ final class DumpFileTests: XCTestCase {
         /// - EMR_SETDIBITSTODEVICE
         /// - EMR_STRETCHDBLT
         /// - EMR_TRANSPARENTBLT
-        /// - EMR_SETMAPPERFLAGS
         /// - EMR_ANGLEARC
         /// - EMR_EXTFLOODFILL
         /// - EMR_FILLRGN
@@ -18,10 +17,8 @@ final class DumpFileTests: XCTestCase {
         /// - EMR_POLYDRAW
         /// - EMR_POLYDRAW16
         /// - EMR_DRAWESCAPE
-        /// - EMR_EXTESCAPE
         /// - EMR_NAMEDESCAPE
         /// - EMR_CREATECOLORSPACE
-        /// - EMR_CREATECOLORSPACEW
         /// - EMR_COLORCORRECTPALETTE
         /// - EMR_DELETECOLORSPACE
         /// - EMR_RESIZEPALETTE
@@ -35,11 +32,33 @@ final class DumpFileTests: XCTestCase {
         /// - EMR_SCALEWINDOWEXTEX
         /// - EMR_SETICMPROFILEA
         /// - EMR_SETICMPROFILEW
-        /// - EMR_SETLINKEDUFIS
         /// - EMR_SETMAPPERFLAGS
         /// - EMR_SETTEXTJUSTIFICATION
         
         var files: [(String, String)] = []
+        files.append(("EMFSpool_0000", "emf"))
+        files.append(("EMFSpool_0001", "emf"))
+        files.append(("EMFSpool_0002", "emf"))
+        files.append(("EMFSpool_0003", "emf"))
+        files.append(("EMFSpool_0004", "emf"))
+        files.append(("EMFSpool_0005", "emf"))
+        files.append(("EMFSpool_0006", "emf"))
+        files.append(("EMFSpool_0007", "emf"))
+        files.append(("EMFSpool_0008", "emf"))
+        files.append(("EMFSpool_0009", "emf"))
+        files.append(("EMFSpool_0010", "emf"))
+        files.append(("EMFSpool_0011", "emf"))
+        files.append(("EMFSpool_0012", "emf"))
+        files.append(("EMFSpool_0013", "emf"))
+        files.append(("EMFSpool_0014", "emf"))
+        files.append(("EMFSpool_0015", "emf"))
+        files.append(("EMFSpool_0016", "emf"))
+        files.append(("EMFSpool_0017", "emf"))
+        files.append(("EMFSpool_0018", "emf"))
+        files.append(("EMFSpool_0019", "emf"))
+        files.append(("EMFSpool_0020", "emf"))
+        files.append(("EMFSpool_0021", "emf"))
+        /*
         files.append(("LibreOffice_1", "emf"))
         files.append(("LibreOffice_20000532000076E3000072DCFAEC1969", "emf"))
         files.append(("LibreOffice_37281_reduced", "emf"))
@@ -68,7 +87,6 @@ final class DumpFileTests: XCTestCase {
         files.append(("LibreOffice_test", "emf"))
         files.append(("LibreOffice_test_libuemf_p_ref", "emf"))
         files.append(("LibreOffice_test_libuemf_ref30", "emf"))
-
         files.append(("LibreOffice_computer_mail", "emf"))
         files.append(("LibreOffice_ETO_PDY", "emf"))
         files.append(("LibreOffice_image1", "emf"))
@@ -278,14 +296,15 @@ final class DumpFileTests: XCTestCase {
         files.append(("test-185", "emf"))
         files.append(("test-186", "emf"))
         files.append(("runtime-assets_milkmateya01", "emf"))
+        */
         for (name, fileExtension) in files {
             let data = try getData(name: name, fileExtension: fileExtension)
             let file = try EmfFile(data: data)
             try file.enumerateRecords { record in
                 if case .stretchDIBits = record {
-                    //print("EMR_STRETCHDIBITS")
+                    print("EMR_STRETCHDIBITS")
                 } else {
-                    //print(record)
+                    print(record)
                 }
 
                 return .continue

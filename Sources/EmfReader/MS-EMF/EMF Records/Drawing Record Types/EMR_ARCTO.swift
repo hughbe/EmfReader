@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.3 EMR_ARCTO Record
 /// The EMR_ARCTO record specifies an elliptical arc. It resets the current drawing position to the endpoint of the arc.
@@ -30,7 +30,7 @@ public struct EMR_ARCTO {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 40 else {
+        guard self.size == 0x00000028 else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.9.1 EMR_GLSBOUNDEDRECORD Record
 /// The EMR_GLSBOUNDEDRECORD record specifies an OpenGL function with a bounding rectangle for output.
@@ -31,7 +31,7 @@ public struct EMR_GLSBOUNDEDRECORD {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 28 && (size % 4) == 0 else {
+        guard size >= 0x0000001C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -44,7 +44,7 @@ public struct EMR_GLSBOUNDEDRECORD {
         /// cbData (4 bytes): An unsigned integer that specifies the size in bytes, of the Data field. If this value is zero, no data is
         /// attached to this record.
         self.cbData = try dataStream.read(endianess: .littleEndian)
-        guard 28 + self.cbData <= size else {
+        guard 0x0000001C + self.cbData <= size else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.16 EMR_SETICMPROFILEW Record
 /// The EMR_SETICMPROFILEW record specifies a color profile in a file with a name consisting of Unicode characters, for graphics
@@ -30,10 +30,12 @@ public struct EMR_SETICMPROFILEW {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 20 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000014 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// dwFlags (4 bytes): An unsigned integer that contains color profile flags.
         self.dwFlags = try dataStream.read(endianess: .littleEndian)
@@ -44,13 +46,15 @@ public struct EMR_SETICMPROFILEW {
         
         /// cbData (4 bytes): An unsigned integer that specifies the size of color profile data, if attached.
         self.cbData = try dataStream.read(endianess: .littleEndian)
-        guard 20 + self.cbName + self.cbData <= self.size else {
+        let dataCount = Int(self.cbName) + Int(self.cbData)
+        guard dataCount < 0xFFFFFFE8 &&
+                0x00000014 + dataCount <= size else {
             throw EmfReadError.corrupted
         }
         
         /// Data (variable): An array of size (cbName + cbData) in bytes, which specifies the UTF16-LE name and raw data of the
         /// desired color profile.
-        self.data = try dataStream.readBytes(count: Int(self.cbName + cbData))
+        self.data = try dataStream.readBytes(count: dataCount)
         
         try dataStream.readFourByteAlignmentPadding(startPosition: startPosition)
         

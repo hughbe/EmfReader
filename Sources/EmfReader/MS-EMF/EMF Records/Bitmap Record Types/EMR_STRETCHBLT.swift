@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.1.6 EMR_STRETCHBLT Record
 /// The EMR_STRETCHBLT record specifies a block transfer of pixels from a source bitmap to a destination rectangle, optionally in
@@ -49,7 +49,7 @@ public struct EMR_STRETCHBLT {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 108 && (size %  4) == 0 else {
+        guard size >= 0x0000006C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -122,7 +122,7 @@ public struct EMR_STRETCHBLT {
         
         /// BmiSrc (variable): The source bitmap header.
         if offBmiSrc != 0 && cbBmiSrc != 0 {
-            guard offBmiSrc >= 108 &&
+            guard offBmiSrc >= 0x0000006C &&
                     offBmiSrc + cbBmiSrc <= size else {
                 throw EmfReadError.corrupted
             }
@@ -135,7 +135,7 @@ public struct EMR_STRETCHBLT {
         
         /// BitsSrc (variable): The source bitmap bits.
         if offBitsSrc != 0 && cbBitsSrc != 0 {
-            guard offBitsSrc >= 108 &&
+            guard offBitsSrc >= 0x0000006C &&
                     offBitsSrc + cbBitsSrc <= size else {
                 throw EmfReadError.corrupted
             }

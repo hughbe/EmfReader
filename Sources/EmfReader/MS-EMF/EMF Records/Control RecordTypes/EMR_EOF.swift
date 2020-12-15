@@ -30,7 +30,7 @@ public struct EMR_EOF {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 16 && (size % 4) == 0 else {
+        guard size >= 16 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         

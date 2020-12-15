@@ -6,16 +6,6 @@ final class DumpFileTests: XCTestCase {
         /// Not witnessed:
         /// - EMR_MASKBLT
         /// - EMR_PLGBLT
-        /// - EMR_SETDIBITSTODEVICE
-        /// - EMR_STRETCHDBLT
-        /// - EMR_TRANSPARENTBLT
-        /// - EMR_ANGLEARC
-        /// - EMR_EXTFLOODFILL
-        /// - EMR_FILLRGN
-        /// - EMR_FRAMERGN
-        /// - EMR_PAINTRGN
-        /// - EMR_POLYDRAW
-        /// - EMR_POLYDRAW16
         /// - EMR_DRAWESCAPE
         /// - EMR_NAMEDESCAPE
         /// - EMR_CREATECOLORSPACE
@@ -36,6 +26,14 @@ final class DumpFileTests: XCTestCase {
         /// - EMR_SETTEXTJUSTIFICATION
         
         var files: [(String, String)] = []
+        files.append(("aspose_File1", "emf"))
+        files.append(("aspose_missing-font", "emf"))
+        files.append(("aspose_Picture1", "emf"))
+        files.append(("aspose_Picture2", "emf"))
+        files.append(("aspose_SmoothingTest", "emf"))
+        files.append(("aspose_test", "emf"))
+        files.append(("aspose_TextHintTest", "emf"))
+        files.append(("NicheRecords", "emf"))
         files.append(("EMFSpool_0000", "emf"))
         files.append(("EMFSpool_0001", "emf"))
         files.append(("EMFSpool_0002", "emf"))
@@ -58,7 +56,6 @@ final class DumpFileTests: XCTestCase {
         files.append(("EMFSpool_0019", "emf"))
         files.append(("EMFSpool_0020", "emf"))
         files.append(("EMFSpool_0021", "emf"))
-        /*
         files.append(("LibreOffice_1", "emf"))
         files.append(("LibreOffice_20000532000076E3000072DCFAEC1969", "emf"))
         files.append(("LibreOffice_37281_reduced", "emf"))
@@ -296,7 +293,6 @@ final class DumpFileTests: XCTestCase {
         files.append(("test-185", "emf"))
         files.append(("test-186", "emf"))
         files.append(("runtime-assets_milkmateya01", "emf"))
-        */
         for (name, fileExtension) in files {
             let data = try getData(name: name, fileExtension: fileExtension)
             let file = try EmfFile(data: data)

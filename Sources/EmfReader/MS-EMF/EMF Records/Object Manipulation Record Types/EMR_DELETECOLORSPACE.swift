@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.2 EMR_DELETECOLORSPACE Record
 /// The EMR_DELETECOLORSPACE record deletes a logical color space object.<76>

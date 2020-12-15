@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.1.2 EMR_BITBLT Record
 /// The EMR_BITBLT record specifies a block transfer of pixels from a source bitmap to a destination rectangle, optionally in combination
@@ -46,7 +46,7 @@ public struct EMR_BITBLT {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 100 && (size %  4) == 0 else {
+        guard size >= 0x00000064 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -113,7 +113,7 @@ public struct EMR_BITBLT {
         
         /// BmiSrc (variable): The source bitmap header.
         if offBmiSrc != 0 && cbBmiSrc != 0 {
-            guard offBmiSrc >= 100 &&
+            guard offBmiSrc >= 0x00000064 &&
                     offBmiSrc + cbBmiSrc <= size else {
                 throw EmfReadError.corrupted
             }
@@ -126,7 +126,7 @@ public struct EMR_BITBLT {
         
         /// BitsSrc (variable): The source bitmap bits.
         if offBitsSrc != 0 && cbBitsSrc != 0 {
-            guard offBitsSrc >= 100 &&
+            guard offBitsSrc >= 0x00000064 &&
                     offBitsSrc + cbBitsSrc <= size else {
                 throw EmfReadError.corrupted
             }

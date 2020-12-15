@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.28 EMR_POLYPOLYGON Record
 /// The EMR_POLYPOLYGON record specifies a series of closed polygons.
@@ -35,7 +35,7 @@ public struct EMR_POLYPOLYGON {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 && (size %  4) == 0 else {
+        guard size >= 0x00000020 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -45,10 +45,13 @@ public struct EMR_POLYPOLYGON {
         self.bounds = try RectL(dataStream: &dataStream)
         
         /// NumberOfPolygons (4 bytes): An unsigned integer that specifies the number of polygons.
-        self.numberOfPolygons = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 + self.numberOfPolygons * 4 else {
+        let numberOfPolygons: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard numberOfPolygons < 0x3FFFFFF7 &&
+                0x00000020 + numberOfPolygons * 4 <= size else {
             throw EmfReadError.corrupted
         }
+        
+        self.numberOfPolygons = numberOfPolygons
         
         /// Count (4 bytes): An unsigned integer that specifies the total number of points in all polygons.
         /// Line width Device supports wideline Maximum points allowed
@@ -58,10 +61,13 @@ public struct EMR_POLYPOLYGON {
         /// Any extra points MUST be ignored. To draw a line with more points, the data SHOULD be divided into groups that have
         /// less than the maximum number of points, and an EMR_POLYPOLYGON operation SHOULD be performed for each group
         /// of points.
-        self.count = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 + self.numberOfPolygons * 4 + self.count * 8 else {
+        let count: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard count < 0x1FFFFFFB &&
+                0x00000020 + numberOfPolygons * 4 + count * 8 == size else {
             throw EmfReadError.corrupted
         }
+        
+        self.count = count
         
         /// PolygonPointCount (variable): An array of 32-bit unsigned integers that specifies the point count for each polygon.
         var polygonPointCount: [UInt32] = []

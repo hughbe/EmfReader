@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.4 EMR_CREATEDIBPATTERNBRUSHPT Record
 /// The EMR_CREATEDIBPATTERNBRUSHPT record defines a pattern brush for graphics operations. The pattern is specified by a DIB.
@@ -37,7 +37,7 @@ public struct EMR_CREATEDIBPATTERNBRUSHPT {
         
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 else {
+        guard size >= 0x00000020 else {
             throw EmfReadError.corrupted
         }
         
@@ -69,7 +69,7 @@ public struct EMR_CREATEDIBPATTERNBRUSHPT {
         
         /// BmiSrc (variable): The DIB header, which is the DibHeaderInfo field of a DeviceIndependentBitmap object.
         if offBmi != 0 && cbBmi != 0 {
-            guard offBmi >= 32 &&
+            guard offBmi >= 0x00000020 &&
                     offBmi + cbBmi <= size else {
                 throw EmfReadError.corrupted
             }
@@ -82,7 +82,7 @@ public struct EMR_CREATEDIBPATTERNBRUSHPT {
         
         /// BitsSrc (variable): The DIB bits, which is the aData field of a DeviceIndependentBitmap object.
         if offBits != 0 && cbBits != 0 {
-            guard offBits >= 32 &&
+            guard offBits >= 0x00000020 &&
                     offBits + cbBits <= size else {
                 throw EmfReadError.corrupted
             }

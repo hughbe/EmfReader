@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.5 EmrText Object
 /// The EmrText object contains values for text output.

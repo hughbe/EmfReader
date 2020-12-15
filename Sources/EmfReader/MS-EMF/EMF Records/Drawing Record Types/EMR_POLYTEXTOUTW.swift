@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.33 EMR_POLYTEXTOUTW Record
 /// The EMR_POLYTEXTOUTW record draws one or more Unicode text strings using the current font and text colors.
@@ -36,7 +36,7 @@ public struct EMR_POLYTEXTOUTW {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 && (size %  4) == 0 else {
+        guard size >= 0x00000028 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -59,6 +59,9 @@ public struct EMR_POLYTEXTOUTW {
         
         /// cStrings (4 bytes): An unsigned integer that specifies the number of EmrText objects.
         self.cStrings = try dataStream.read(endianess: .littleEndian)
+        guard self.cStrings < 0x6666665 else {
+            throw EmfReadError.corrupted
+        }
         
         /// wEmrText (variable): An array of EmrText objects (section 2.2.5) that specify the output strings in Unicode UTF16-LE
         /// characters, with text attributes and spacing values. The number of EmrText objects is specified by cStrings.

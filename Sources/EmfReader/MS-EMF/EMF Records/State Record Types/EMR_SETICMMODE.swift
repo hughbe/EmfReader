@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.14 EMR_SETICMMODE Record
 /// The EMR_SETICMMODE record specifies the mode of Image Color Management (ICM) for graphics operations.<84>

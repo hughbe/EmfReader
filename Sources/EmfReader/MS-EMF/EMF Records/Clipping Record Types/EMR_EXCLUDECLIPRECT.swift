@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.2.1 EMR_EXCLUDECLIPRECT Record
 /// The EMR_EXCLUDECLIPRECT record excludes the specified rectangle from the current clipping region.
@@ -31,7 +31,7 @@ public struct EMR_EXCLUDECLIPRECT {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 24 else {
+        guard self.size == 0x00000018 else {
             throw EmfReadError.corrupted
         }
         

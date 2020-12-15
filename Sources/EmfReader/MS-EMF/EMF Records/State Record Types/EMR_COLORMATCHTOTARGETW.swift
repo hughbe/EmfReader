@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.1 EMR_COLORMATCHTOTARGETW Record
 /// The EMR_COLORMATCHTOTARGETW record specifies whether to perform color matching with a color profile that is specified in a
@@ -39,10 +39,12 @@ public struct EMR_COLORMATCHTOTARGETW {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 24 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000018 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// dwAction (4 bytes): An unsigned integer that specifies a value from the ColorSpace enumeration (section 2.1.7).
         self.dwAction = try ColorSpace(dataStream: &dataStream)
@@ -56,13 +58,15 @@ public struct EMR_COLORMATCHTOTARGETW {
         
         /// cbData (4 bytes): An unsigned integer that specifies the size of the raw data of the target color profile in the Data field.
         self.cbData = try dataStream.read(endianess: .littleEndian)
-        guard 24 + self.cbName + self.cbData <= self.size else {
+        let dataCount = Int(self.cbName) + Int(self.cbData)
+        guard dataCount < 0xFFFFFFE4 &&
+            0x00000018 + dataCount <= size else {
             throw EmfReadError.corrupted
         }
         
         /// Data (variable): An array of size (cbName + cbData) bytes, which specifies the UTF16-LE name and raw data of the target
         /// color profile.
-        self.data = try dataStream.readBytes(count: Int(self.cbName + cbData))
+        self.data = try dataStream.readBytes(count: dataCount)
         
         try dataStream.readFourByteAlignmentPadding(startPosition: startPosition)
         

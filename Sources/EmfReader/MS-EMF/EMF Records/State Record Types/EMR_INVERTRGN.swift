@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.3 EMR_INVERTRGN Record
 /// The EMR_INVERTRGN record inverts the colors in the specified region. The current clipping regions used by this record are maintained
@@ -32,25 +32,32 @@ public struct EMR_INVERTRGN {
         
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 28 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x0000001C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// Bounds (16 bytes): A RectL object ([MS-WMF] section 2.2.2.19) that specifies the destination bounding rectangle in logical
         /// coordinates. If the intersection of this rectangle with the current clipping region is empty, this record has no effect.
         self.bounds = try RectL(dataStream: &dataStream)
         
         /// RgnDataSize (4 bytes): An unsigned integer that specifies the size of region data in bytes.
-        self.rgnDataSize = try dataStream.read(endianess: .littleEndian)
-        guard self.rgnDataSize <= self.size - 28 else {
+        let rgnDataSize: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard rgnDataSize < 0xFFFFFFE0 &&
+                0x0000001C + rgnDataSize <= size else {
             throw EmfReadError.corrupted
         }
+        
+        self.rgnDataSize = rgnDataSize
         
         /// RgnData (variable): A RgnDataSize length array of bytes that specifies the output region in a RegionData object (section
         /// 2.2.24). The bounds specified by the RegionDataHeader field of this object MAY<65> be used as the bounding region
         /// when this record is processed.
         self.rgnData = try dataStream.readBytes(count: Int(self.rgnDataSize))
+        
+        try dataStream.readFourByteAlignmentPadding(startPosition: startPosition)
         
         guard dataStream.position - startPosition == self.size else {
             throw EmfReadError.corrupted

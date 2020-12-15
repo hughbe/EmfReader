@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.12 EMR_GRADIENTFILL Record
 /// The EMR_GRADIENTFILL record specifies filling rectangles or triangles with gradients of color.<67>
@@ -33,7 +33,7 @@ public struct EMR_GRADIENTFILL {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 36 && (size % 4) == 0 else {
+        guard size >= 0x00000024 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -45,7 +45,7 @@ public struct EMR_GRADIENTFILL {
         
         /// nVer (4 bytes): An unsigned integer that specifies the number of vertexes.
         self.nVer = try dataStream.read(endianess: .littleEndian)
-        guard 36 + self.nVer * 16 <= self.size else {
+        guard 0x00000024 + self.nVer * 16 <= self.size else {
             throw EmfReadError.corrupted
         }
         
@@ -56,7 +56,7 @@ public struct EMR_GRADIENTFILL {
         /// (section 2.1.15).
         self.ulMode = try GradientFill(dataStream: &dataStream)
         let vertexIndicesSize: UInt32 = (self.ulMode == .triangle) ? 12 : 8
-        guard 36 + self.nVer * 16 + self.nTri * vertexIndicesSize <= self.size else {
+        guard 0x00000024 + self.nVer * 16 + self.nTri * vertexIndicesSize <= self.size else {
             throw EmfReadError.corrupted
         }
         

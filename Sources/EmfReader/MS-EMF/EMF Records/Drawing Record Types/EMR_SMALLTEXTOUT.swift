@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.37 EMR_SMALLTEXTOUT Record
 /// The EMR_SMALLTEXTOUT record outputs a string.
@@ -38,7 +38,7 @@ public struct EMR_SMALLTEXTOUT {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 36 && (size %  4) == 0 else {
+        guard size >= 0x00000024 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -59,7 +59,7 @@ public struct EMR_SMALLTEXTOUT {
         self.fuOptions = try ExtTextOutOptions(dataStream: &dataStream)
         let hasRectangle = !self.fuOptions.contains(.noRect)
         let wideString = !self.fuOptions.contains(.smallChars)
-        guard 36 + (wideString ? 2 * self.cChars : self.cChars) + (hasRectangle ? 16 : 0) <= size else {
+        guard 0x00000024 + (wideString ? 2 * self.cChars : self.cChars) + (hasRectangle ? 16 : 0) <= size else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.12 LogBrushEx Object
 /// The LogBrushEx object defines the style, color, and pattern of a device-independent brush.

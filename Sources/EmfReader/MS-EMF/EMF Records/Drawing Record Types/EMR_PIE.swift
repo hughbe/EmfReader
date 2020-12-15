@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.15 EMR_PIE Record
 /// The EMR_PIE record specifies a pie-shaped wedge bounded by the intersection of an ellipse and two radials. The pie is outlined by
@@ -34,7 +34,7 @@ public struct EMR_PIE {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 40 else {
+        guard self.size == 0x00000028 else {
             throw EmfReadError.corrupted
         }
         

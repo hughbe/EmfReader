@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.4 EMR_CHORD Record
 /// The EMR_CHORD record specifies a chord, which is a region bounded by the intersection of an ellipse and a line segment, called a
@@ -36,7 +36,7 @@ public struct EMR_CHORD {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 40 else {
+        guard self.size == 0x00000028 else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.5 EMR_ELLIPSE Record
 /// The EMR_ELLIPSE record specifies an ellipse. The center of the ellipse is the center of the specified bounding rectangle. The ellipse
@@ -29,7 +29,7 @@ public struct EMR_ELLIPSE {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 24 else {
+        guard self.size == 0x00000018 else {
             throw EmfReadError.corrupted
         }
         

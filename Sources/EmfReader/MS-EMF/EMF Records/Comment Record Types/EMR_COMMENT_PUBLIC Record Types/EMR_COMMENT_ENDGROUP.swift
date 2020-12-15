@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.3.4.2 EMR_COMMENT_ENDGROUP Record
 /// The EMR_COMMENT_ENDGROUP record specifies the end of a group of drawing records.
@@ -34,7 +34,7 @@ public struct EMR_COMMENT_ENDGROUP {
         /// Size (4 bytes) The value of the Size field can be used to distinguish between the different EMR_HEADER record types.
         /// See the flowchart in section 2.3.4.2 for details.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 20 else {
+        guard self.size == 0x00000014 else {
             throw EmfReadError.corrupted
         }
         
@@ -42,7 +42,7 @@ public struct EMR_COMMENT_ENDGROUP {
         /// fields in the RecordBuffer field that follows. It MUST NOT include the size of itself or the size of the AlignmentPadding field,
         /// if present.
         self.dataSize = try dataStream.read(endianess: .littleEndian)
-        guard self.dataSize == 8 else {
+        guard self.dataSize == 0x00000008 else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.3 EMR_DELETEOBJECT Record
 /// The EMR_DELETEOBJECT record deletes a graphics object, which is specified by its index in the EMF object table (section 3.1.1.1).

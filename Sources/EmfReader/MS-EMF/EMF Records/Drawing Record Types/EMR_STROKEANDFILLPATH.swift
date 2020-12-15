@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.38 EMR_STROKEANDFILLPATH Record
 /// The EMR_STROKEANDFILLPATH record closes any open figures in a path, strokes the outline of the path by using the current pen,
@@ -29,7 +29,7 @@ public struct EMR_STROKEANDFILLPATH {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 24 else {
+        guard self.size == 0x00000018 else {
             throw EmfReadError.corrupted
         }
         

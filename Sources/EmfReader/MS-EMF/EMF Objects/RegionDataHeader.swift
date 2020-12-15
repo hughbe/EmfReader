@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.25 RegionDataHeader Object
 /// The RegionDataHeader object defines the properties of a RegionData (section 2.2.24) object.

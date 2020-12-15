@@ -29,7 +29,7 @@ public struct EMR_GLSRECORD {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 12 && (size % 4) == 0 else {
+        guard size >= 0x0000000C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -37,10 +37,13 @@ public struct EMR_GLSRECORD {
         
         /// cbData (4 bytes): An unsigned integer that specifies the size in bytes, of the Data field. If this value is zero, no data is
         /// attached to this record.
-        self.cbData = try dataStream.read(endianess: .littleEndian)
-        guard 12 + self.cbData <= size else {
+        let cbData: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard cbData < 0xFFFFFFF0 &&
+                0x0000000C + cbData <= size else {
             throw EmfReadError.corrupted
         }
+        
+        self.cbData = cbData
         
         /// Data (variable, optional): An array of bytes that specifies data for the OpenGL function.
         self.data = try dataStream.readBytes(count: Int(self.cbData))

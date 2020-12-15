@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.1.4 EMR_PLGBLT Record
 /// The EMR_PLGBLT record specifies a block transfer of pixels from a source bitmap to a destination parallelogram, with the application
@@ -57,7 +57,7 @@ public struct EMR_PLGBLT {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 128 && (size %  4) == 0 else {
+        guard size >= 0x0000008C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -152,7 +152,7 @@ public struct EMR_PLGBLT {
         
         /// BmiSrc (variable): The source bitmap header.
         if offBmiSrc != 0 && cbBmiSrc != 0 {
-            guard offBmiSrc >= 128 &&
+            guard offBmiSrc >= 0x0000008C &&
                     offBmiSrc + cbBmiSrc <= size else {
                 throw EmfReadError.corrupted
             }
@@ -165,7 +165,7 @@ public struct EMR_PLGBLT {
         
         /// BitsSrc (variable): The source bitmap bits.
         if offBitsSrc != 0 && cbBitsSrc != 0 {
-            guard offBitsSrc >= 128 &&
+            guard offBitsSrc >= 0x0000008C &&
                     offBitsSrc + cbBitsSrc <= size else {
                 throw EmfReadError.corrupted
             }
@@ -178,7 +178,7 @@ public struct EMR_PLGBLT {
 
         /// BmiMask (variable): The mask bitmap header.
         if offBmiMask != 0 && cbBmiMask != 0 {
-            guard offBmiMask >= 128 &&
+            guard offBmiMask >= 0x0000008C &&
                     offBmiMask + cbBmiMask <= size else {
                 throw EmfReadError.corrupted
             }
@@ -191,7 +191,7 @@ public struct EMR_PLGBLT {
         
         /// BitsMask (variable): The mask bitmap bits.
         if offBitsMask != 0 && cbBitsMask != 0 {
-            guard offBitsMask >= 128 &&
+            guard offBitsMask >= 0x0000008C &&
                     offBitsMask + cbBitsMask <= size else {
                 throw EmfReadError.corrupted
             }

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.35 EMR_ROUNDRECT Record
 /// The EMR_ROUNDRECT record specifies a rectangle with rounded corners. The rectangle is outlined by using the current pen and
@@ -30,7 +30,7 @@ public struct EMR_ROUNDRECT {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 32 else {
+        guard self.size == 0x00000020 else {
             throw EmfReadError.corrupted
         }
         

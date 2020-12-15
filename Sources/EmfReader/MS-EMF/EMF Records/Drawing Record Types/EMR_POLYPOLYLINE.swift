@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.30 EMR_POLYPOLYLINE Record
 /// The EMR_POLYPOLYLINE record draws multiple series of connected line segments.
@@ -34,7 +34,7 @@ public struct EMR_POLYPOLYLINE {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 && (size %  4) == 0 else {
+        guard size >= 0x00000020 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -46,7 +46,7 @@ public struct EMR_POLYPOLYLINE {
         /// NumberOfPolylines (4 bytes): An unsigned integer that specifies the number of polylines, which is the number of elements
         /// in the aPolylinePointCount array.
         self.numberOfPolylines = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 + self.numberOfPolylines * 4 else {
+        guard size >= 0x00000020 + self.numberOfPolylines * 4 else {
             throw EmfReadError.corrupted
         }
         
@@ -58,7 +58,7 @@ public struct EMR_POLYPOLYLINE {
         /// > 1 no 1360
         /// Any extra points MUST be ignored.
         self.count = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 + self.numberOfPolylines * 4 + self.count * 8 else {
+        guard size >= 0x00000020 + self.numberOfPolylines * 4 + self.count * 8 else {
             throw EmfReadError.corrupted
         }
         

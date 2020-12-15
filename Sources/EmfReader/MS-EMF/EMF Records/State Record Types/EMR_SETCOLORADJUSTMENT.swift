@@ -31,13 +31,18 @@ public struct EMR_SETCOLORADJUSTMENT {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 0x00000020 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000020 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
+        self.size = size
+        
         /// ColorAdjustment (24 bytes): A ColorAdjustment object (section 2.2.2) that specifies color adjustment values.
         self.colorAdjustment = try ColorAdjustment(dataStream: &dataStream)
+        guard 8 + self.colorAdjustment.size == self.size else {
+            throw EmfReadError.corrupted
+        }
         
         guard dataStream.position - startPosition == self.size else {
             throw EmfReadError.corrupted

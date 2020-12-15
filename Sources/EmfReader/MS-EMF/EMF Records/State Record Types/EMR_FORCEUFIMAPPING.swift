@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.2 EMR_FORCEUFIMAPPING Record
 /// The EMR_FORCEUFIMAPPING record forces the font mapper to match fonts based on their UniversalFontId in preference to their
@@ -28,7 +28,7 @@ public struct EMR_FORCEUFIMAPPING {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 16 else {
+        guard self.size == 0x00000010 else {
             throw EmfReadError.corrupted
         }
         

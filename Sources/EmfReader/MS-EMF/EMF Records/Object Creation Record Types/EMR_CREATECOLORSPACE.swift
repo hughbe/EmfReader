@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.2 EMR_CREATECOLORSPACE Record
 /// The EMR_CREATECOLORSPACE record creates a logical color space object from a color profile with a name consisting of ASCII
@@ -31,10 +31,12 @@ public struct EMR_CREATECOLORSPACE {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 0x00000154 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000154 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// ihCS (4 bytes): An unsigned integer that specifies the index of the logical color space object in the EMF object table
         /// (section 3.1.1.1). This index MUST be saved so that this object can be reused or modified.

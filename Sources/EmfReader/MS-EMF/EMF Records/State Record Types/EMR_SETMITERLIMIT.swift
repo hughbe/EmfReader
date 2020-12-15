@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.21 EMR_SETMITERLIMIT Record
 /// The EMR_SETMITERLIMIT record specifies the limit for the length of miter joins.

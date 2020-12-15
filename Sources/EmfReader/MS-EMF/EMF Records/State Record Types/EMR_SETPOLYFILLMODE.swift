@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF]2.3.11.22 EMR_SETPOLYFILLMODE Record
 /// The EMR_SETPOLYFILLMODE record defines polygon fill mode.

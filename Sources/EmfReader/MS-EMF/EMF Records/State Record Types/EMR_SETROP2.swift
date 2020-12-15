@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.23 EMR_SETROP2 Record
 /// The EMR_SETROP2 record defines a binary raster operation mode.

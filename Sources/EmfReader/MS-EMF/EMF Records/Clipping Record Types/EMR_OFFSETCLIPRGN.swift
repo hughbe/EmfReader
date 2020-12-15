@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.2.4 EMR_OFFSETCLIPRGN Record
 /// The EMR_OFFSETCLIPRGN record moves the current clipping region in the playback device context by the specified offsets.
@@ -28,7 +28,7 @@ public struct EMR_OFFSETCLIPRGN {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 16 else {
+        guard self.size == 0x00000010 else {
             throw EmfReadError.corrupted
         }
         

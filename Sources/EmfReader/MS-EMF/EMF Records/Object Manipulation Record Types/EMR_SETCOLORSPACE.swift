@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.7 EMR_SETCOLORSPACE Record
 /// The EMR_SETCOLORSPACE record selects a logical color space into the playback device context.<78>

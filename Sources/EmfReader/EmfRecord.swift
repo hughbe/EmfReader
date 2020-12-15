@@ -131,7 +131,7 @@ public enum EmfRecord {
         let position = dataStream.position
         let type = try RecordType(dataStream: &dataStream)
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 8 && (size % 4) == 0 else {
+        guard size >= 8 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         

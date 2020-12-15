@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.31 EMR_SETWINDOWORGEX Record
 /// The EMR_SETWINDOWORGEX record defines the window origin
@@ -27,7 +27,7 @@ public struct EMR_SETWINDOWORGEX {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 16 else {
+        guard self.size == 0x00000010 else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.1 EMR_ANGLEARC Record
 /// The EMR_ANGLEARC record specifies a line segment of an arc. The line segment is drawn from the current position to the beginning
@@ -33,7 +33,7 @@ public struct EMR_ANGLEARC {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 28 else {
+        guard self.size == 0x0000001C else {
             throw EmfReadError.corrupted
         }
         

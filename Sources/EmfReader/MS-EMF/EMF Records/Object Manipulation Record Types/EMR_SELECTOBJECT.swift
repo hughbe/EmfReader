@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.5 EMR_SELECTOBJECT Record
 /// The EMR_SELECTOBJECT record selects a graphics object into the playback device context.

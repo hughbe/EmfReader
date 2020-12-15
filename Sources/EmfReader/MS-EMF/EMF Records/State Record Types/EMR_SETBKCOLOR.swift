@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.10 EMR_SETBKCOLOR Record
 /// The EMR_SETBKCOLOR record specifies the background color for text output.

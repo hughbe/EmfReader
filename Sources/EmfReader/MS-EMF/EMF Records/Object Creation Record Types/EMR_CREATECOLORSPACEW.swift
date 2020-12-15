@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.3 EMR_CREATECOLORSPACEW Record
 /// The EMR_CREATECOLORSPACEW record creates a logical color space object from a color profile with a name consisting of Unicode

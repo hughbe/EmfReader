@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.17 EMR_POLYBEZIER16 Record
 /// The EMR_POLYBEZIER16 record specifies one or more Bezier curves. The curves are drawn using the current pen.
@@ -30,7 +30,7 @@ public struct EMR_POLYBEZIER16 {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 28 && (size %  4) == 0 else {
+        guard size >= 0x0000001C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -42,10 +42,13 @@ public struct EMR_POLYBEZIER16 {
         /// Count (4 bytes): An unsigned integer that specifies the total number of points. This value MUST be one more than three
         /// times the number of curves to be drawn because each Bezier curve requires two control points and an endpoint, and
         /// the initial curve requires an additional starting point.
-        self.count = try dataStream.read(endianess: .littleEndian)
-        guard 28 + self.count * 4 == size else {
+        let count: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard count < 0x3FFFFFF8 &&
+                0x0000001C + count * 4 == size else {
             throw EmfReadError.corrupted
         }
+        
+        self.count = count
         
         /// aPoints (variable): An array of PointS objects ([MS-WMF] section 2.2.2.16), which specify the points of the Bezier curves
         /// in logical units.

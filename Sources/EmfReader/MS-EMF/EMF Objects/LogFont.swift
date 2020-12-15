@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.13 LogFont Object
 /// The LogFont object specifies the basic attributes of a logical font.

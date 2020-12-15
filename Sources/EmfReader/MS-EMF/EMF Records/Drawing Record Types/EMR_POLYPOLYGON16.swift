@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.29 EMR_POLYPOLYGON16 Record
 /// The EMR_POLYPOLYGON16 record specifies a series of closed polygons. Each polygon is outlined using the current pen, and filled
@@ -33,7 +33,7 @@ public struct EMR_POLYPOLYGON16 {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 && (size %  4) == 0 else {
+        guard size >= 0x00000020 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -44,13 +44,13 @@ public struct EMR_POLYPOLYGON16 {
         
         /// NumberOfPolygons (4 bytes): An unsigned integer that specifies the number of polygons.
         self.numberOfPolygons = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 + self.numberOfPolygons * 4 else {
+        guard size >= 0x00000020 + self.numberOfPolygons * 4 else {
             throw EmfReadError.corrupted
         }
         
         /// Count (4 bytes): An unsigned integer that specifies the total number of points in all polygons.
         self.count = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 + self.numberOfPolygons * 4 + self.count * 4 else {
+        guard size >= 0x00000020 + self.numberOfPolygons * 4 + self.count * 4 else {
             throw EmfReadError.corrupted
         }
         

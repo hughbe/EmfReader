@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.4 EMR_RESIZEPALETTE Record
 /// The EMR_RESIZEPALETTE record increases or decreases the size of an existing LogPalette object (section 2.2.17).

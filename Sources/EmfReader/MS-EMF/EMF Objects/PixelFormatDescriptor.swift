@@ -43,7 +43,7 @@ public struct PixelFormatDescriptor {
         
         /// nSize (2 bytes): An unsigned integer that specifies the size in bytes, of this data structure.
         self.nSize = try dataStream.read(endianess: .littleEndian)
-        guard self.nSize == 40 else {
+        guard self.nSize == 0x00000028 else {
             throw EmfReadError.corrupted
         }
         

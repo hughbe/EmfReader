@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.1.5 EMR_SETDIBITSTODEVICE Record
 /// The EMR_SETDIBITSTODEVICE record specifies a block transfer of pixels from specified scanlines of a source bitmap to a
@@ -47,7 +47,7 @@ public struct EMR_SETDIBITSTODEVICE {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 76 && (size %  4) == 0 else {
+        guard size >= 0x0000004C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -106,7 +106,7 @@ public struct EMR_SETDIBITSTODEVICE {
         
         /// BmiSrc (variable): The source bitmap header.
         if offBmiSrc != 0 && cbBmiSrc != 0 {
-            guard offBmiSrc >= 76 &&
+            guard offBmiSrc >= 0x0000004C &&
                     offBmiSrc + cbBmiSrc <= size else {
                 throw EmfReadError.corrupted
             }
@@ -119,7 +119,7 @@ public struct EMR_SETDIBITSTODEVICE {
         
         /// BitsSrc (variable): The source bitmap bits.
         if offBitsSrc != 0 && cbBitsSrc != 0 {
-            guard offBitsSrc >= 76 &&
+            guard offBitsSrc >= 0x0000004C &&
                     offBitsSrc + cbBitsSrc <= size else {
                 throw EmfReadError.corrupted
             }

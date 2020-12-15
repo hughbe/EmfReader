@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.9 EMR_SETARCDIRECTION Record
 /// The EMR_SETARCDIRECTION record specifies the drawing direction to be used for arc and rectangle output.

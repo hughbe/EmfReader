@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.1 EMR_CREATEBRUSHINDIRECT Record
 /// The EMR_CREATEBRUSHINDIRECT record defines a logical brush for graphics operations
@@ -26,7 +26,7 @@ public struct EMR_CREATEBRUSHINDIRECT {
             throw EmfReadError.corrupted
         }
         
-        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record. This value is 0x0000001C.
+        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record. This value is 0x00000018.
         self.size = try dataStream.read(endianess: .littleEndian)
         guard self.size == 0x00000018 else {
             throw EmfReadError.corrupted

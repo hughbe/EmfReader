@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.20 EMR_POLYDRAW Record
 /// The EMR_POLYDRAW record specifies a set of line segments and Bezier curves.
@@ -31,7 +31,7 @@ public struct EMR_POLYDRAW {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 28 && (size %  4) == 0 else {
+        guard size >= 0x0000001C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -41,10 +41,13 @@ public struct EMR_POLYDRAW {
         self.bounds = try RectL(dataStream: &dataStream)
         
         /// Count (4 bytes): An unsigned integer that specifies the number of points in the aPoints field.
-        self.count = try dataStream.read(endianess: .littleEndian)
-        guard 28 + self.count * 8 + self.count * 1 <= size else {
+        let count: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard count < 0x1C71C718 &&
+                0x0000001C + count * 8 + count * 1 <= size else {
             throw EmfReadError.corrupted
         }
+        
+        self.count = count
         
         /// aPoints (variable): An array of PointL objects ([MS-WMF] section 2.2.2.15), which specify the points in logical units.
         var aPoints: [PointL] = []

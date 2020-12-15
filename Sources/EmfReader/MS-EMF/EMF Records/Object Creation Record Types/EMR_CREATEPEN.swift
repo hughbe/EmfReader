@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.7 EMR_CREATEPEN Record
 /// The EMR_CREATEPEN record defines a logical pen for graphics operations.

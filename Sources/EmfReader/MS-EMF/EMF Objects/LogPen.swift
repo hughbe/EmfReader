@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.19 LogPen Object
 /// The LogPen object defines the style, width, and color of a logical pen.

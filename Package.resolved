@@ -27,6 +27,15 @@
           "revision": "2d0efa7a0fbdb3eae9ff99456cb864382b883f4d",
           "version": "1.0.10"
         }
+      },
+      {
+        "package": "WmfReader",
+        "repositoryURL": "https://github.com/hughbe/WmfReader",
+        "state": {
+          "branch": null,
+          "revision": "fd5d5e67c231b6c9ff2d5b178f745c3e5a0bcdb7",
+          "version": "1.0.3"
+        }
       }
     ]
   },

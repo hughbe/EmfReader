@@ -27,7 +27,7 @@ public struct EMR_SETTEXTJUSTIFICATION {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 20 else {
+        guard self.size == 0x00000014 else {
             throw EmfReadError.corrupted
         }
         

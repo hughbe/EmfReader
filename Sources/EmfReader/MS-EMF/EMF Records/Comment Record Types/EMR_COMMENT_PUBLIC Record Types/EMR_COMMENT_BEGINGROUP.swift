@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.3.4.1 EMR_COMMENT_BEGINGROUP Record
 /// The EMR_COMMENT_BEGINGROUP record specifies the beginning of a group of drawing records.
@@ -37,7 +37,7 @@ public struct EMR_COMMENT_BEGINGROUP {
         /// Size (4 bytes) The value of the Size field can be used to distinguish between the different EMR_HEADER record types.
         /// See the flowchart in section 2.3.4.2 for details.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 40 else {
+        guard size >= 0x00000028 else {
             throw EmfReadError.corrupted
         }
         
@@ -47,7 +47,9 @@ public struct EMR_COMMENT_BEGINGROUP {
         /// fields in the RecordBuffer field that follows. It MUST NOT include the size of itself or the size of the AlignmentPadding field,
         /// if present.
         let dataSize: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard dataSize >= 8 && dataSize <= size - 8 else {
+        guard dataSize >= 0x0000001C &&
+                dataSize < 0xFFFFFFF0 &&
+                0x0000000C + dataSize <= size else {
             throw EmfReadError.corrupted
         }
         
@@ -72,7 +74,7 @@ public struct EMR_COMMENT_BEGINGROUP {
         
         /// nDescription (4 bytes): The number of Unicode characters in the optional description string that follows.
         self.nDescription = try dataStream.read(endianess: .littleEndian)
-        guard 24 + self.nDescription * 2 <= self.dataSize else {
+        guard 0x00000028 + self.nDescription * 2 <= self.size else {
             throw EmfReadError.corrupted
         }
         

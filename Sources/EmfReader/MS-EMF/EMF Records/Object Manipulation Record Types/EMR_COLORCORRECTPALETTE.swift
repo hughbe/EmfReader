@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.1 EMR_COLORCORRECTPALETTE Record
 /// The EMR_COLORCORRECTPALETTE record specifies the correction of entries of a logical palette object using WCS.<75>

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.20 EMR_SETMAPPERFLAGS Record
 /// The EMR_SETMAPPERFLAGS record specifies parameters for the process of matching logical fonts to physical fonts, which is

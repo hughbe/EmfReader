@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.27 EMR_POLYLINETO16 Record
 /// The EMR_POLYLINETO16 record specifies one or more straight lines based upon the current drawing position.
@@ -32,7 +32,7 @@ public struct EMR_POLYLINETO16 {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 28 && (size %  4) == 0 else {
+        guard size >= 0x0000001C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -42,10 +42,13 @@ public struct EMR_POLYLINETO16 {
         self.bounds = try RectL(dataStream: &dataStream)
         
         /// Count (4 bytes): An unsigned integer that specifies the number of points.
-        self.count = try dataStream.read(endianess: .littleEndian)
-        guard 28 + self.count * 4 == size else {
+        let count: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard count < 0x3FFFFFF8 &&
+                0x0000001C + count * 4 == size else {
             throw EmfReadError.corrupted
         }
+        
+        self.count = count
         
         /// aPoints (variable): A Count length array of PointS objects ([MS-WMF] section 2.2.2.16, which specifies the array of points.
         var aPoints: [PointS] = []

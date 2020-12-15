@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.18 EMR_SETLINKEDUFIS Record
 /// The EMR_SETLINKEDUFIS record sets the UniversalFontIds (section 2.2.27) of linked fonts to use during character lookup.

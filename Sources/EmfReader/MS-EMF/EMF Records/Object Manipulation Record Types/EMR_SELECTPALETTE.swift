@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.6 EMR_SELECTPALETTE Record
 /// The EMR_SELECTPALETTE record selects a logical palette into the playback device context.

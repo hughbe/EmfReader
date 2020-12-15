@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.6 EMR_CREATEPALETTE Record
 /// The EMR_CREATEPALETTE record defines a logical palette for graphics operations.
@@ -28,10 +28,12 @@ public struct EMR_CREATEPALETTE {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 16 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000010 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// ihPal (4 bytes): An unsigned integer that specifies the index of the logical palette object in the EMF object table (section
         /// 3.1.1.1). This index MUST be saved so that this object can be reused or modified.

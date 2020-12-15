@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.13 EMR_LINETO Record
 /// The EMR_LINETO record specifies a line from the current drawing position up to, but not including, the specified point. It resets the
@@ -29,7 +29,7 @@ public struct EMR_LINETO {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 16 else {
+        guard self.size == 0x00000010 else {
             throw EmfReadError.corrupted
         }
         

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.7 EMR_SCALEVIEWPORTEXTEX Record
 /// The EMR_SCALEVIEWPORTEXTEX record specifies the current viewport in the playback device context by using ratios formed by
@@ -36,7 +36,7 @@ public struct EMR_SCALEVIEWPORTEXTEX {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 24 else {
+        guard self.size == 0x00000018 else {
             throw EmfReadError.corrupted
         }
         

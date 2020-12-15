@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.8.8 EMR_SETPALETTEENTRIES Record
 /// The EMR_SETPALETTEENTRIES record defines RGB color values in a range of entries for an existing logical palette.
@@ -29,10 +29,12 @@ public struct EMR_SETPALETTEENTRIES {
         }
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
-        self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size >= 20 else {
+        let size: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard size >= 0x00000014 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
+        
+        self.size = size
         
         /// ihPal (4 bytes): An unsigned integer that specifies an index of a LogPalette object (section 2.2.17) in the EMF object table
         /// (section 3.1.1.1).
@@ -42,10 +44,13 @@ public struct EMR_SETPALETTEENTRIES {
         self.start = try dataStream.read(endianess: .littleEndian)
         
         /// NumberofEntries (4 bytes): An unsigned integer that specifies the number of entries in the aPalEntries array.
-        self.numberofEntries = try dataStream.read(endianess: .littleEndian)
-        guard 20 + self.numberofEntries * 4 == self.size else {
+        let numberofEntries: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard numberofEntries < 0x3FFFFFFA &&
+                0x00000014 + numberofEntries * 4 == size else {
             throw EmfReadError.corrupted
         }
+        
+        self.numberofEntries = numberofEntries
         
         /// aPalEntries (variable): An array of LogPaletteEntry objects (section 2.2.18) that specify the palette data.
         var aPalEntries: [LogPaletteEntry] = []

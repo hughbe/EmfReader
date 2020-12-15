@@ -41,7 +41,7 @@ public enum EMR_COMMENT_PUBLIC {
         /// Size (4 bytes) The value of the Size field can be used to distinguish between the different EMR_HEADER record types.
         /// See the flowchart in section 2.3.4.2 for details.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 12 else {
+        guard size >= 0x00000014 else {
             throw EmfReadError.corrupted
         }
         
@@ -49,7 +49,9 @@ public enum EMR_COMMENT_PUBLIC {
         /// fields in the RecordBuffer field that follows. It MUST NOT include the size of itself or the size of the AlignmentPadding field,
         /// if present.
         let dataSize: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard dataSize >= 8 && dataSize <= size - 8 else {
+        guard dataSize >= 8 &&
+                dataSize < 0xFFFFFFF0 &&
+                0x0000000C + dataSize <= size else {
             throw EmfReadError.corrupted
         }
         
@@ -64,7 +66,6 @@ public enum EMR_COMMENT_PUBLIC {
         /// SHOULD be one of the values listed in the preceding table, which are specified in the EmrComment enumeration
         /// (section 2.1.10), unless additional public comment record types have been implemented on the print server.
         let publicCommentIdentifier: UInt32 = try dataStream.read(endianess: .littleEndian)
-        
         
         dataStream.position = position
         switch publicCommentIdentifier {

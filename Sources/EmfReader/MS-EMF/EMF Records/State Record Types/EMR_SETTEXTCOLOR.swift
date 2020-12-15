@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.26 EMR_SETTEXTCOLOR Record
 /// The EMR_SETTEXTCOLOR record defines the current text foreground color.

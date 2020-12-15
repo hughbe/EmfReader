@@ -31,7 +31,7 @@ public struct EMR_COMMENT {
         /// Size (4 bytes) The value of the Size field can be used to distinguish between the different EMR_HEADER record types.
         /// See the flowchart in section 2.3.4.2 for details.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 12 else {
+        guard size >= 0x0000000C else {
             throw EmfReadError.corrupted
         }
         
@@ -41,7 +41,8 @@ public struct EMR_COMMENT {
         /// fields in the RecordBuffer field that follows. It MUST NOT include the size of itself or the size of the AlignmentPadding field,
         /// if present.
         let dataSize: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard dataSize <= size - 8 else {
+        guard dataSize < 0xFFFFFFF0 &&
+                0x0000000C + dataSize <= size else {
             throw EmfReadError.corrupted
         }
         

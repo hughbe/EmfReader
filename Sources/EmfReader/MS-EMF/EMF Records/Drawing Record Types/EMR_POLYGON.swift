@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.22 EMR_POLYGON Record
 /// The EMR_POLYGON record specifies a polygon consisting of two or more vertexes connected by straight lines.
@@ -32,7 +32,7 @@ public struct EMR_POLYGON {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 28 && (size %  4) == 0 else {
+        guard size >= 0x0000001C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -47,10 +47,13 @@ public struct EMR_POLYGON {
         /// > 1 yes 16K
         /// > 1 no 1360
         /// Any extra points MUST be ignored.
-        self.count = try dataStream.read(endianess: .littleEndian)
-        guard 28 + self.count * 8 == size else {
+        let count: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard count < 0x1FFFFFFC &&
+                0x0000001C + count * 8 == size else {
             throw EmfReadError.corrupted
         }
+        
+        self.count = count
         
         /// aPoints (variable): A Count length array of PointL objects ([MS-WMF] section 2.2.2.15) that specifies the vertexes of the
         /// polygon in logical units.

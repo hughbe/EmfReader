@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.8 EMR_EXTCREATEFONTINDIRECTW Record
 /// The EMR_EXTCREATEFONTINDIRECTW record defines a logical font for graphics operations.
@@ -27,9 +27,9 @@ public struct EMR_EXTCREATEFONTINDIRECTW {
             throw EmfReadError.corrupted
         }
         
-        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record. This value is 0x0000001C.
+        /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 104 else {
+        guard size == 0x00000068 || size == 0x0000014C || size >= 0x000000170 else {
             throw EmfReadError.corrupted
         }
         

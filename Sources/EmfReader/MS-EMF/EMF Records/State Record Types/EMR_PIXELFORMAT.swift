@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.5 EMR_PIXELFORMAT Record
 /// The EMR_PIXELFORMAT record specifies the pixel format to use for graphics operations.<83>
@@ -27,7 +27,7 @@ public struct EMR_PIXELFORMAT {
         
         /// Size (4 bytes): An unsigned integer that specifies the size of this record in bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 48 else {
+        guard self.size == 0x00000030 else {
             throw EmfReadError.corrupted
         }
         

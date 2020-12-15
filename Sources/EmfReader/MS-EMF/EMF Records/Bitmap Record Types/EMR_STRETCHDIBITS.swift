@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.1.7 EMR_STRETCHDIBITS Record
 /// The EMR_STRETCHDIBITS record specifies a block transfer of pixels from a source bitmap to a destination rectangle, optionally in
@@ -52,7 +52,7 @@ public struct EMR_STRETCHDIBITS {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 80 && (size %  4) == 0 else {
+        guard size >= 0x00000050 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
@@ -117,7 +117,7 @@ public struct EMR_STRETCHDIBITS {
         
         /// BmiSrc (variable): The source bitmap header.
         if offBmiSrc != 0 && cbBmiSrc != 0 {
-            guard offBmiSrc >= 80 &&
+            guard offBmiSrc >= 0x00000050 &&
                     offBmiSrc + cbBmiSrc <= size else {
                 throw EmfReadError.corrupted
             }
@@ -130,7 +130,7 @@ public struct EMR_STRETCHDIBITS {
         
         /// BitsSrc (variable): The source bitmap bits.
         if offBitsSrc != 0 && cbBitsSrc != 0 {
-            guard offBitsSrc >= 80 &&
+            guard offBitsSrc >= 0x00000050 &&
                     offBitsSrc + cbBitsSrc <= size else {
                 throw EmfReadError.corrupted
             }

@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.9 EMR_EXTCREATEPEN Record
 /// The EMR_EXTCREATEPEN record defines an extended logical pen for graphics operations. An optional DIB can be specified to use
@@ -38,7 +38,7 @@ public struct EMR_EXTCREATEPEN {
         
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 52 else {
+        guard size >= 0x00000034 else {
             throw EmfReadError.corrupted
         }
         
@@ -72,7 +72,7 @@ public struct EMR_EXTCREATEPEN {
         
         /// BmiSrc (variable): The DIB header, which is the DibHeaderInfo field of a DeviceIndependentBitmap object.
         if offBmi != 0 && cbBmi != 0 {
-            guard offBmi >= 52 &&
+            guard offBmi >= 0x00000034 &&
                     offBmi + cbBmi <= size else {
                 throw EmfReadError.corrupted
             }
@@ -85,7 +85,7 @@ public struct EMR_EXTCREATEPEN {
         
         /// BitsSrc (variable): The DIB bits, which is the aData field of a DeviceIndependentBitmap object.
         if offBits != 0 && cbBits != 0 {
-            guard offBits >= 52 &&
+            guard offBits >= 0x00000034 &&
                     offBits + cbBits <= size else {
                 throw EmfReadError.corrupted
             }

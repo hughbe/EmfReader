@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.2.2 EMR_EXTSELECTCLIPRGN Record
 /// The EMR_EXTSELECTCLIPRGN record combines the specified region with the current clipping region using the specified mode.
@@ -31,14 +31,20 @@ public struct EMR_EXTSELECTCLIPRGN {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 16 && (size % 4) == 0 else {
+        guard size >= 0x00000010 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         
         self.size = size
         
         /// RgnDataSize (4 bytes): An unsigned integer that specifies the size of the RgnData field in bytes.
-        self.rgnDataSize = try dataStream.read(endianess: .littleEndian)
+        let rgnDataSize: UInt32 = try dataStream.read(endianess: .littleEndian)
+        guard rgnDataSize < 0xFFFFFFEC &&
+                0x00000010 + rgnDataSize <= size else {
+            throw EmfReadError.corrupted
+        }
+        
+        self.rgnDataSize = rgnDataSize
         
         /// RegionMode (4 bytes): An unsigned integer that specifies the way to use the region. This value is in the RegionMode
         /// (section 2.1.29) enumeration.

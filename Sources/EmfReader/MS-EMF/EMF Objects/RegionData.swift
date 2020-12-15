@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.24 RegionData Object
 /// The RegionData object specifies data that defines a region, which is made of non-overlapping rectangles.

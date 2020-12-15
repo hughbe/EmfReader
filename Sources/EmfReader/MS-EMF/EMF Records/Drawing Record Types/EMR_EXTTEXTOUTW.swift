@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.8 EMR_EXTTEXTOUTW Record
 /// The EMR_EXTTEXTOUTW record draws a Unicode text string using the current font and text colors.
@@ -35,7 +35,7 @@ public struct EMR_EXTTEXTOUTW {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 0x0000004C && (size %  4) == 0 else {
+        guard size >= 0x0000004C && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         

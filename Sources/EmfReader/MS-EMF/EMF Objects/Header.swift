@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.9 Header Object
 /// The Header object defines the EMF metafile header. It specifies properties of the device on which the image in the metafile was created.

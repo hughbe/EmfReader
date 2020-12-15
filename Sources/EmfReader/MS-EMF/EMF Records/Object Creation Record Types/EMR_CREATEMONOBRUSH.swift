@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.7.5 EMR_CREATEMONOBRUSH Record
 /// The EMR_CREATEMONOBRUSH record defines a monochrome pattern brush for graphics operations.
@@ -38,7 +38,7 @@ public struct EMR_CREATEMONOBRUSH {
         
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes, of this record.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 32 else {
+        guard size >= 0x00000020 else {
             throw EmfReadError.corrupted
         }
         

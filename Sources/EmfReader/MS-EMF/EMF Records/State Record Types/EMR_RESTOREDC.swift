@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.6 EMR_RESTOREDC Record
 /// The EMR_RESTOREDC record restores the playback device context to the specified state. The playback device context is restored

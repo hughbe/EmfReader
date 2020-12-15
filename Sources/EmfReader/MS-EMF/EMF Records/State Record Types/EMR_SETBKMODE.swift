@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.11.11 EMR_SETBKMODE Record
 /// The EMR_SETBKMODE record specifies the background mix mode to use with text, hatched brushes, and pens that are not solid lines.

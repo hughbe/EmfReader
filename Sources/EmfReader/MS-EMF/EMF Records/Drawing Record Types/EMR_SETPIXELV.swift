@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.5.36 EMR_SETPIXELV Record
 /// The EMR_SETPIXELV record defines the color of the pixel at the specified logical coordinates.
@@ -29,7 +29,7 @@ public struct EMR_SETPIXELV {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         self.size = try dataStream.read(endianess: .littleEndian)
-        guard self.size == 20 else {
+        guard self.size == 0x00000014 else {
             throw EmfReadError.corrupted
         }
         

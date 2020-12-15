@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.3.6.1 EMR_DRAWESCAPE Record
 /// The EMR_DRAWESCAPE record passes arbitrary information to a printer driver. The intent is that the information results in
@@ -33,7 +33,7 @@ public struct EMR_DRAWESCAPE {
         /// Size (4 bytes): An unsigned integer that specifies the size in bytes of this record in the metafile. This value MUST be a
         /// multiple of 4 bytes.
         let size: UInt32 = try dataStream.read(endianess: .littleEndian)
-        guard size >= 0x00000010 && (size % 4) == 0 else {
+        guard size >= 0x00000010 && size % 4 == 0 else {
             throw EmfReadError.corrupted
         }
         

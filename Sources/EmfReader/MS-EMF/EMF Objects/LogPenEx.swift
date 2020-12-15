@@ -6,7 +6,7 @@
 //
 
 import DataStream
-import MetafileReader
+import WmfReader
 
 /// [MS-EMF] 2.2.20 LogPenEx Object
 /// The LogPenEx object specifies the style, width, and color of an extended logical pen.

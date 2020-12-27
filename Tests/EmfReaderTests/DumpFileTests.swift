@@ -23,7 +23,6 @@ final class DumpFileTests: XCTestCase {
         /// - EMR_SETICMPROFILEA
         /// - EMR_SETICMPROFILEW
         /// - EMR_SETMAPPERFLAGS
-        /// - EMR_SETTEXTJUSTIFICATION
         
         var files: [(String, String)] = []
         files.append(("aspose_File1", "emf"))

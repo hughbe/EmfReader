@@ -50,18 +50,17 @@ public struct EMR_EXTSELECTCLIPRGN {
         /// (section 2.1.29) enumeration.
         self.regionMode = try RegionMode(dataStream: &dataStream)
         
-        if dataStream.position - startPosition == self.size {
-            self.rgnData = nil
-            return
-        }
-        
-        let startPosition2 = dataStream.position
+        let dataStartPosition = dataStream.position
         
         /// RgnData (variable): An array of bytes that specifies a RegionData object (section 2.2.24) in logical units. If RegionMode is
         /// RGN_COPY, this data can be omitted and the clipping region SHOULD be set to the default clipping region.
-        self.rgnData = try RegionData(dataStream: &dataStream)
+        if self.rgnDataSize > 0 {
+            self.rgnData = try RegionData(dataStream: &dataStream, size: self.rgnDataSize)
+        } else {
+            self.rgnData = nil
+        }
 
-        guard dataStream.position - startPosition2 == self.rgnDataSize else {
+        guard dataStream.position - dataStartPosition == self.rgnDataSize else {
             throw EmfReadError.corrupted
         }
         

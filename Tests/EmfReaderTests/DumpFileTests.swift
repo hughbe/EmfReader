@@ -25,6 +25,7 @@ final class DumpFileTests: XCTestCase {
         /// - EMR_SETMAPPERFLAGS
         
         var files: [(String, String)] = []
+        files.append(("test4", "emf"))
         files.append(("aspose_File1", "emf"))
         files.append(("aspose_missing-font", "emf"))
         files.append(("aspose_Picture1", "emf"))

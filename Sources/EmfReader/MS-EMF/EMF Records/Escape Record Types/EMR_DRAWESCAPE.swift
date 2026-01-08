@@ -23,7 +23,7 @@ public struct EMR_DRAWESCAPE {
     public init(dataStream: inout DataStream) throws {
         let startPosition = dataStream.position
         
-        /// Type (4 bytes): An unsigned integer that identifies this record type from the EmrComment enumeration (section 2.1.10).
+        /// Type (4 bytes): An unsigned integer that identifies this record type from the RecordType enumeration (section 2.1.10).
         /// It MUST be EMR_DRAWESCAPE, which is 0x00000069.
         self.type = try RecordType(dataStream: &dataStream)
         guard self.type == RecordType.EMR_DRAWESCAPE else {

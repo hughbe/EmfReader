@@ -60,7 +60,8 @@ public struct EMR_CREATECOLORSPACEW {
         
         self.cbData = cbData
         
-        /// Data (variable, optional): An array of bytes that specifies color profile data.
+        /// Data (variable, optional): An array of bytes that specifies color profile data. When cbData is zero, this field is
+        /// optional and is ignored.
         self.data = try dataStream.readBytes(count: Int(max(1, self.cbData)))
         
         try dataStream.readFourByteAlignmentPadding(startPosition: startPosition)

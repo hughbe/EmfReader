@@ -24,7 +24,7 @@ public struct EMR_NAMEDESCAPE {
     public init(dataStream: inout DataStream) throws {
         let startPosition = dataStream.position
         
-        /// Type (4 bytes): An unsigned integer that identifies this record type from the EmrComment enumeration (section 2.1.10).
+        /// Type (4 bytes): An unsigned integer that identifies this record type from the RecordType enumeration (section 2.1.10).
         /// It MUST be EMR_NAMEDESCAPE, which is 0x0000006E.
         self.type = try RecordType(dataStream: &dataStream)
         guard self.type == RecordType.EMR_NAMEDESCAPE else {

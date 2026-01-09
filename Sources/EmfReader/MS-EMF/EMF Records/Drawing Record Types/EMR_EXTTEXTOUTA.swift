@@ -66,6 +66,9 @@ public struct EMR_EXTTEXTOUTA {
                                     unicode: false)
         
         try dataStream.readFourByteAlignmentPadding(startPosition: startPosition)
+        
+        // Seen some cases where there is zero padding of a few more bytes.
+        dataStream.position = startPosition + Int(self.size)
  
         guard dataStream.position - startPosition == self.size else {
             throw EmfReadError.corrupted

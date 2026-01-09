@@ -80,7 +80,7 @@ public struct EmrText {
             }
             
             dataStream.position = recordStartPosition + Int(offString)
-            self.string = try dataStream.readString(count: Int(byteCount), encoding: unicode ? .utf16LittleEndian : .ascii)!
+            self.string = try dataStream.readString(count: Int(byteCount), encoding: unicode ? .utf16LittleEndian : .ascii) ?? ""
         } else {
             self.string = ""
         }

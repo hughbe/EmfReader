@@ -118,7 +118,7 @@ public struct EMR_HEADER {
             }
 
             dataStream.position = startPosition + Int(emfHeader.offDescription)
-            self.description = try dataStream.readString(count: (Int(emfHeader.nDescription) - 1) * 2, encoding: .utf16LittleEndian)!
+            self.description = try dataStream.readString(count: (Int(emfHeader.nDescription) - 1) * 2, encoding: .utf16LittleEndian) ?? ""
             
             // Read null terminator.
             let _: UInt16 = try dataStream.read(endianess: .littleEndian)

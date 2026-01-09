@@ -49,9 +49,9 @@ public struct EMR_EXTCREATEFONTINDIRECTW {
         /// ihFonts fields—is 12.
         ///  Next, note that because the size in bytes of the entire record is present in its Size field, the size in bytes of the
         /// variable-length elw field can be computed as follows. Size - 12
-        ///  If the size of the elw field is equal to or less than the size of a LogFontPanose object (section 2.2.16), elw MUST be
-        /// treated as a fixed-length LogFont object. Bytes beyond the extent of the LogFont object, up to the end of the elw field,
-        /// MUST be ignored.
+        ///  The size of the elw field must be equal to or greater than the size of a LogPanose object.
+        ///  If the size of the elw field is equal to the size of a LogFontPanose object (section 2.2.16), elw MUST be
+        /// treated as a fixed-length LogFontPanose object.
         ///  If the size of the elw field is greater than the size of a LogFontPanose object, then elw MUST be treated as a
         /// variable-length LogFontExDv object.
         /// The size of a LogFontPanose object is 0x0140 (320 decimal). It is determined by adding up the sizes of its fields, as follows:
@@ -64,8 +64,10 @@ public struct EMR_EXTCREATEFONTINDIRECTW {
         ///  Fields from Version through Culture: 0x0018 (24 decimal).
         ///  Panose: The exact length of this field is 0x000A, but it MUST be padded by two additional bytes for 32-bit alignment,
         /// so for the purposes of this computation the length is 0x000C (12 decimal).
-        if self.size - 12 <= 0x0140 {
+        if self.size - 12 < 320 {
             self.elw = .logFont(try LogFont(dataStream: &dataStream))
+        } else if self.size - 12 <= 0x0140 {
+            self.elw = .logFontPanose(try LogFontPanose(dataStream: &dataStream))
         } else {
             self.elw = .logFontExDv(try LogFontExDv(dataStream: &dataStream))
         }
@@ -87,6 +89,7 @@ public struct EMR_EXTCREATEFONTINDIRECTW {
     
     public enum Elw {
         case logFontExDv(_: LogFontExDv)
+        case logFontPanose(_: LogFontPanose)
         case logFont(_: LogFont)
     }
 }

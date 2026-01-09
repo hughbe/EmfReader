@@ -106,6 +106,6 @@ public struct LogFont {
         /// Facename (64 bytes): A string of no more than 32 Unicode characters that specifies the typeface name of the font. If the
         /// length of this string is less than 32 characters, a terminating NULL MUST be present, after which the remainder of this
         /// field MUST be ignored.
-        self.facename = try dataStream.readString(count: 64, encoding: .utf16LittleEndian)!.trimmingCharacters(in: ["\0"])
+        self.facename = try dataStream.readString(count: 64, encoding: .utf16LittleEndian)?.trimmingCharacters(in: ["\0"]) ?? ""
     }
 }
